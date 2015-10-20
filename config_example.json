@@ -1,0 +1,15 @@
+{
+    "server": {
+        "ssh_pubkey": "~/.ssh/id_rsa.pub",
+        "ip": "1.1.1.1",
+        "hostname": "hostname",
+        "timezone": "Pacific/Tahiti",
+        "admin_user": "adminuser"
+    },
+    "flask_app": {
+        "name": "flaskapp",
+        "local_app_dir": "/python-projects/fabric-webserver/fabric-flask",
+        "username": "flaskuser",
+        "domain": "domain.com"
+    }
+}

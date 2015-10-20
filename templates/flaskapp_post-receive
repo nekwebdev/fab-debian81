@@ -1,0 +1,2 @@
+#!/bin/sh
+GIT_WORK_TREE=/home/%(app_user)s/www/%(app_name)s git checkout -f
