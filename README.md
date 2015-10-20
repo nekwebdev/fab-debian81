@@ -13,7 +13,7 @@ Each further deployable type of app will have it's own section.
 Get the code and prepare the virtualenv:
 
 ```
-git clone git@github.com:nekwebdev/fab-debian81.git myserver
+git clone https://github.com/nekwebdev/fab-debian81.git myserver
 cd myserver
 virtualenv venv
 source venv/bin/activate
