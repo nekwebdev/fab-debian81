@@ -66,8 +66,8 @@ def basic_setup():
         'timezone': env.timezone
     }
     sudo('echo "\n%(server_ip)s %(hostname)s" >> /etc/hosts' % opts)
-    append('/etc/hosts', '%(server_ip)s  %(hostname)s' % opts, use_sudo = True)
-    sudo('hostname %(hostname)s' % opts)
+    sudo('echo "%(hostname)s" > /etc/hostname' % opts)
+    sudo('hostname -F /etc/hostname')
 
     success('Setting the timezone to %s...' % env.timezone)
     sudo('echo "%(timezone)s" > /etc/timezone' % opts)
