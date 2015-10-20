@@ -43,7 +43,7 @@ env.flask_local_dir = CONFIG['flask_app']['local_app_dir']
 ssh_config = '/etc/ssh/sshd_config'
 sysctl_config = '/etc/sysctl.conf'
 host_config = '/etc/host.conf'
-rkhunter_config = '/etc/nginx/rkhunter.conf'
+rkhunter_config = '/etc/rkhunter.conf'
 rkhunter_config2 = '/etc/default/rkhunter'
 nginx_config = '/etc/nginx/nginx.conf'
 supervisor_config = '/etc/supervisor/supervisord.conf'
@@ -250,12 +250,11 @@ def install_flask_app(opts):
     remote_app_dir = '/home/%(app_user)s/www/%(app_name)s' % opts
 
     with cd(remote_app_dir):
-        run('rm -rf venv')
+        if exists('venv'):
+            run('rm -rf venv')
         run('virtualenv venv')
-        run('source venv/bin/activate')
-        run('pip install -r requirements.txt')
-
-    run('supervisorctl restart %(app_name)s' % opts)
+        with prefix('source venv/bin/activate'):
+            run('pip install -r requirements.txt')
 
 
 def install_php5_fpm():
@@ -329,7 +328,6 @@ def install_mysql():
 
     # restart mysql and php-fastcgi
     sudo('service mysql restart')
-    sudo('service php5-fpm restart')
 
     password = prompt(red('Please enter your mysql root password so I can configure weekly checks:'))
     sudo('echo "#!/bin/sh\nmysqlcheck -o --user=root --password=%s -A" > /etc/cron.weekly/mysqlcheck' % password)
@@ -346,7 +344,7 @@ def create_user(username, admin = False, ssh_key = True):
         return False
 
     # Check if user already exists
-    if sudo("grep -c '^%s:' /etc/passwd" % username) == 1:
+    if sudo('finger -ms %s 2>&1 1>/dev/null | wc -l' % username) == 0:
         err("username already in use")
         return False
 
